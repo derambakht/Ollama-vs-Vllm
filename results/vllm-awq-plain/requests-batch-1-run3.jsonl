@@ -1,0 +1,1 @@
+{"user": 0, "seq": 0, "prompt_id": "short-1", "size": "short", "t_start": 1793704899.7710721, "ttft": 0.0268199770944193, "total": 0.16591058706399053, "out_tokens": 30, "in_tokens": 71, "chunks": 29, "error": null, "status": 200, "saw_think": false}

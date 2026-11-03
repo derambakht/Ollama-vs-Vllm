@@ -1,0 +1,15 @@
+# Persian working copies: kept locally, never published
+fa/
+*.fa.md
+
+# Runtime output of the scripts (raw results ARE published, logs are not)
+logs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+bench/.venv/
+
+# Local post assets (copies of results/report/charts), not part of the published data
+results/report/charts/linkedin-post/

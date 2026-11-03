@@ -1,0 +1,18 @@
+{
+  "label": "ollama-tuned",
+  "engine": "ollama",
+  "engine_version": "0.40.14",
+  "model": "qwen3:8b-fp16",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "driver": "595.91.07",
+  "vram": "97887 MiB",
+  "os": "Ubuntu 24.04.5 LTS ",
+  "kernel": "6.8.0-138-generic",
+  "cpu": "AMD EPYC 9554 64-Core Processor",
+  "ram": "1007 GB",
+  "image": "ollama binary ollama version is 0.40.14",
+  "launch": "OLLAMA_MODELS=/workspace/ollama OLLAMA_CONTEXT_LENGTH=8192 OLLAMA_FLASH_ATTENTION=1 OLLAMA_HOST=0.0.0.0:11434 OLLAMA_KEEP_ALIVE=-1 OLLAMA_KV_CACHE_TYPE=f16 OLLAMA_MODELS=/workspace/ollama OLLAMA_NUM_PARALLEL=16 ",
+  "vllm_startup_lines": "",
+  "notes": "NUM_PARALLEL=16 CONTEXT_LENGTH=8192 FLASH_ATTENTION=1 KV=f16",
+  "captured_at": "2026-11-03T10:15:58"
+}
