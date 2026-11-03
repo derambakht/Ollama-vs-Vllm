@@ -30,7 +30,7 @@ The run also covered four vLLM-only experiments:
 
 - **AWQ with the Marlin kernel:** 213 tok/s for one user and 3,306 tok/s at 32 concurrent requests, about 2.1x to 2.4x BF16.
 - **Half the GPU** (`--gpu-memory-utilization 0.5`): no change in speed up to 32 users, and 48 GB left free for other workloads.
-- **A 32k context limit** instead of 8k: the same KV memory, holding 14.2 full-length requests instead of 56.8.
+- **A 32k context limit** instead of 8k: about the same KV memory, holding 14.2 full-length requests instead of 57.2.
 - **A peak probe at 96 concurrent requests:** no errors and no preemptions.
 
 The details are in the [report](docs/REPORT-2026-11-03.md).
