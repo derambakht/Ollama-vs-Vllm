@@ -13,7 +13,7 @@ Everything below is run by `./run-all.sh`; this page is the "why" so the post ca
 | max_tokens | 256, temperature 0 (512 for the peak probe) | long enough to measure decode, deterministic |
 | Client | one script, OpenAI-compatible streaming API on both | same code path, same TTFT definition (first content chunk) |
 | GPU | only the engine under test on the card | vLLM reserves `gpu-memory-utilization` and will fight anything else |
-| Repeats | batch: 3 runs, median reported; users: one 120 s window per level; rate: one 60 s window per level | single runs are noise; the long windows of users and rate average over hundreds of requests |
+| Repeats | batch: 3 runs, median reported; users: one 120 s window per level; rate: one 60 s window per level | single runs are noise; each users or rate window averages over tens to hundreds of requests |
 
 ## Configurations (labels)
 
@@ -37,12 +37,14 @@ Everything below is run by `./run-all.sh`; this page is the "why" so the post ca
    This is what a workshop with N people looks like.
    Metric that matters: TTFT p95 (the person is waiting with headphones on).
 3. **rate** (`--mode rate --levels 0.5,1,2,4,8 --duration 60 --timeout 120`): open loop, Poisson arrivals.
-   Arrivals do not slow down when the server does, so latency explodes past capacity. A request that
-   receives no data for 120 s is abandoned and counted as an error ("dropped"). The chart of served
+   Arrivals do not slow down when the server does, so latency explodes past capacity. The client keeps
+   at most 64 connections open; a request that waits 120 s for a free connection, or receives no data
+   for 120 s once sent, is abandoned and counted as an error ("dropped"). The chart of served
    req/s vs offered req/s shows each engine's real ceiling; the p95 chart shows the cliff.
 
-Prompt mix is `realistic` by default: 30% short (60 to 71 tokens), 50% medium (286 to 391 tokens),
-20% long (756 to 1,021 tokens), token counts as measured on vLLM. Set `PROMPT_MIX=fixed` in
+Prompt mix is `realistic` by default: three short, two medium and two long prompts, drawn with a fixed
+seed. In the published run the measured shares were 39.5% short (60 to 71 tokens), 43.4% medium
+(286 to 391 tokens) and 17.1% long (756 to 1,021 tokens), with token counts as measured on vLLM. Set `PROMPT_MIX=fixed` in
 `config.env` for the runbook's single ~500-token prompt (`fixed-500` in `bench/prompts.json`).
 
 ## Metrics (per run, in `summary.jsonl`)
@@ -63,7 +65,7 @@ Prompt mix is `realistic` by default: 30% short (60 to 71 tokens), 50% medium (2
 
 | Step | Minutes |
 |---|---|
-| Setup and downloads (`runpod-setup.sh`: vLLM, kernels, Ollama, 8B in two formats, AWQ) | about 45 |
+| Setup and downloads, including finding the two Blackwell fixes now built into `runpod-setup.sh` | about 45 |
 | Core: ollama-default 47 + ollama-tuned 28 + vllm-bf16 18 | 93 |
 | Extras: vllm-awq-marlin 19 + vllm-awq-plain 17 + vllm-bf16-u050 18 + peak and ctx32k 3 | 57 |
 | `analyze.py` | under 1 |

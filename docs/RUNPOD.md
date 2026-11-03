@@ -51,7 +51,7 @@ bash server/runpod-setup.sh
 bash server/preflight.sh          # must end with PREFLIGHT OK
 ```
 
-`runpod-setup.sh` does the following, in about 20 minutes:
+`runpod-setup.sh` does the following. It should take about 20 minutes, mostly downloads. This is an estimate: the published run's setup took about 45 minutes, because the two fixes the script now contains had to be found by hand.
 
 1. It checks that the driver is 570 or newer.
 2. It points `config.env` at the volume: `HF_HOME=/workspace/hf` and `OLLAMA_MODELS=/workspace/ollama`. It also sets `VLLM_NATIVE=1` and points `PY` at `/opt/venv/bin/python`.

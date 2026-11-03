@@ -29,7 +29,7 @@ Ollama 0.40.14 and vLLM 0.33.0 on an RTX PRO 6000 Blackwell Server Edition, meas
 The run also covered four vLLM-only experiments:
 
 - **AWQ with the Marlin kernel:** 213 tok/s for one user and 3,306 tok/s at 32 concurrent requests, about 2.1x to 2.4x BF16.
-- **Half the GPU** (`--gpu-memory-utilization 0.5`): no change in speed up to 32 users, and 48 GB left free for other workloads.
+- **Half the GPU** (`--gpu-memory-utilization 0.5`): speed within 8% of the default up to 32 users, with about 48 GiB left free for other workloads.
 - **A 32k context limit** instead of 8k: about the same KV memory, holding 14.2 full-length requests instead of 57.2.
 - **A peak probe at 96 concurrent requests:** no errors and no preemptions.
 
@@ -73,7 +73,7 @@ Follow [docs/RUNPOD.md](docs/RUNPOD.md). In short, rent one RTX PRO 6000 pod, co
 ```bash
 cd /workspace/Ollama-vs-Vllm
 chmod +x run-all.sh server/*.sh
-bash server/runpod-setup.sh                          # venv, vLLM, kernels, Ollama, both model formats (~20 min)
+bash server/runpod-setup.sh                          # venv, vLLM, kernels, Ollama, both model formats (~20 min, estimated)
 setsid nohup ./run-all.sh all > logs/all.out 2>&1 < /dev/null &
 tail -f logs/phase-status.txt                        # one line per finished step; ~2.5 h in total
 ```
@@ -99,7 +99,7 @@ chmod +x run-all.sh server/*.sh
 The output lands in three places:
 
 - `results/report/REPORT.md` holds the tables.
-- `results/report/charts/` holds 1800x1012 PNG charts in light and dark versions.
+- `results/report/charts/` holds 1800-pixel-wide PNG charts in light and dark versions.
 - `results/report/all-runs.csv` holds every run in one flat file.
 
 ### Running the client from a second machine
@@ -131,7 +131,7 @@ Then run `server/gpu-monitor.sh stop && server/stop-all.sh` on the server, put t
 - **Ollama's OpenAI endpoint disables Qwen3 thinking only with `reasoning_effort: "none"`.** It ignores `think: false` and `/no_think` (verified on 0.40.14). The client sets the right switch for each engine automatically.
 - **vLLM on Blackwell can crash at start-up** while JIT-compiling the FlashInfer sampling kernel when `nvcc` is not installed. Run `vllm download-kernels` once to install prebuilt kernels.
 - **Ollama 0.40's default context is 40,960 tokens.** The default configuration also serves requests one at a time under load.
-- **`OLLAMA_NUM_PARALLEL=16` with `OLLAMA_CONTEXT_LENGTH=8192` reserves KV cache for 16 x 8k tokens** at start-up. VRAM went from 21 GB to 33 GB on this card.
+- **`OLLAMA_NUM_PARALLEL=16` with `OLLAMA_CONTEXT_LENGTH=8192` reserves KV cache for 16 x 8k tokens** at start-up. Peak VRAM went from 21.0 GiB to 33.2 GiB on this card.
 - **Older Ollama versions may omit `usage` in streamed responses.** The client then counts chunks instead, which is about one token each. `sanity.py` prints the deviation.
 
 ## License
