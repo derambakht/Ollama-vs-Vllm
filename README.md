@@ -13,14 +13,14 @@ Full report: [docs/REPORT-2026-11-03.md](docs/REPORT-2026-11-03.md). Raw data: [
 
 Ollama 0.40.14 and vLLM 0.33.0 on an RTX PRO 6000 Blackwell Server Edition, measured on 2026-11-03.
 
-| What a user feels | Ollama default | Ollama tuned (16 slots) | vLLM BF16 |
-|---|---|---|---|
-| One user: decode speed | 42 tok/s | 42 tok/s | **89 tok/s** |
-| One user: time to first token | 74 ms | 79 ms | **27 ms** |
-| 32 simultaneous requests: TTFT p95 | 130 s | 15.6 s | **158 ms** |
-| 32 simultaneous requests: aggregate | 39 tok/s | 145 tok/s | **1,580 tok/s** |
-| 32 real users with think time: TTFT p95 | 133 s | 11.4 s | **53 ms** |
-| 8 requests/s arriving at random: dropped | 396 of 458 | 110 of 460 | **0 of 487** |
+| What a user feels                        | Ollama default | Ollama tuned (16 slots) | vLLM BF16             |
+| ---------------------------------------- | -------------- | ----------------------- | --------------------- |
+| One user: decode speed                   | 42 tok/s       | 42 tok/s                | **89 tok/s**    |
+| One user: time to first token            | 74 ms          | 79 ms                   | **27 ms**       |
+| 32 simultaneous requests: TTFT p95       | 130 s          | 15.6 s                  | **158 ms**      |
+| 32 simultaneous requests: aggregate      | 39 tok/s       | 145 tok/s               | **1,580 tok/s** |
+| 32 real users with think time: TTFT p95  | 133 s          | 11.4 s                  | **53 ms**       |
+| 8 requests/s arriving at random: dropped | 396 of 458     | 110 of 460              | **0 of 487**    |
 
 ![Aggregate throughput under concurrency](results/report/charts/core-batch-throughput.png)
 
@@ -30,7 +30,7 @@ The run also covered four vLLM-only experiments:
 
 - **AWQ with the Marlin kernel:** 213 tok/s for one user and 3,306 tok/s at 32 concurrent requests, about 2.1x to 2.4x BF16.
 - **Half the GPU** (`--gpu-memory-utilization 0.5`): speed within 8% of the default up to 32 users, with about 48 GiB left free for other workloads.
-- **A 32k context limit** instead of 8k: about the same KV memory, holding 14.2 full-length requests instead of 57.2.
+- **A 32k context limit** instead of 8k: about the same KV memory, holding 14.2 full-length requests instead of 56.8.
 - **A peak probe at 96 concurrent requests:** no errors and no preemptions.
 
 The details are in the [report](docs/REPORT-2026-11-03.md).
